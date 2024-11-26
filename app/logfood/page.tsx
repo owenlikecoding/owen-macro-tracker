@@ -7,18 +7,12 @@ import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 
-interface Goals {
-    calories: number;
-    protein: number;
-    fats: number;
-    carbs: number;
-}
 
 export default function Home() {
     const [query, setQuery] = useState('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [nutritionData, setNutritionData] = useState<any>(null);
-    const [userGoals, setUserGoals] = useState<Goals | null>(null);
+    const [userGoals, setUserGoals] = useState<any>(null);
     const [servings, setServings] = useState<number>(1);
     const router = useRouter();
 
@@ -29,13 +23,7 @@ export default function Home() {
 
     useEffect(() => {
             const uid = Cookies.get('uid');
-            if (uid) {
-                // Fetch user goals from the database
-                const goalsRef = ref(db, `users/${uid}/goals`);
-                onValue(goalsRef, (snapshot) => {
-                    setUserGoals(snapshot.val());
-                });
-            } else {
+            if (!uid) {
                 // Redirect to login if not authenticated
                 router.push('/login');
             }
