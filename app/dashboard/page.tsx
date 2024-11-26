@@ -8,11 +8,32 @@ import Link from 'next/link';
 import { CircularProgressbar, buildStyles } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import Cookies from 'js-cookie';
+interface Goal {
+  calories: number;
+  protein: number;
+  fats: number;
+  carbs: number;
+}
 
+interface Food {
+  food_name: string;
+  nf_calories: number;
+  nf_protein: number;
+  nf_total_fat: number;
+  nf_total_carbohydrate: number;
+  consumed_at: string;
+}
+
+interface Exercise {
+  exercise: string;
+  duration_min: number;
+  nf_calories: number;
+  consumed_at: string;
+}
 export default function Dashboard() {
-  const [goals, setGoals] = useState<any>(null);
-  const [foods, setFoods] = useState<any[]>([]);
-  const [exercises, setExercises] = useState<any[]>([]);
+  const [goals, setGoals] = useState<Goal | null>(null);
+const [foods, setFoods] = useState<Food[]>([]);
+const [exercises, setExercises] = useState<Exercise[]>([]);
   const [totals, setTotals] = useState({
     calories: 0,
     protein: 0,
@@ -36,7 +57,7 @@ export default function Dashboard() {
         onValue(foodsRef, (snapshot) => {
           const data = snapshot.val();
           const foodList = data ? Object.values(data) : [];
-          setFoods(foodList);
+          setFoods(foodList as Food[]);
         });
 
         // Fetch logged exercises from the database
@@ -44,7 +65,7 @@ export default function Dashboard() {
         onValue(exercisesRef, (snapshot) => {
           const data = snapshot.val();
           const exerciseList = data ? Object.values(data) : [];
-          setExercises(exerciseList);
+          setExercises(exerciseList as Exercise[]);
         });
       } else {
         // Redirect to login if not authenticated

@@ -1,6 +1,5 @@
 'use client';
 import { useEffect } from 'react';
-import { auth } from '../utils/firebase';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Cookies from 'js-cookie';

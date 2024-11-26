@@ -4,20 +4,28 @@ import { useState, useEffect } from 'react';
 import { auth, db } from '../../utils/firebase';
 import { ref, push, onValue } from 'firebase/database';
 import { useRouter } from 'next/navigation';
-import { onAuthStateChanged } from 'firebase/auth';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
+
+interface Goals {
+    calories: number;
+    protein: number;
+    fats: number;
+    carbs: number;
+}
 
 export default function Home() {
     const [query, setQuery] = useState('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
     const [nutritionData, setNutritionData] = useState<any>(null);
-    const [userGoals, setUserGoals] = useState<any>(null);
+    const [userGoals, setUserGoals] = useState<Goals | null>(null);
     const [servings, setServings] = useState<number>(1);
     const router = useRouter();
 
     const appId = '7272dd70';
     const apiKey = 'ae696401282e705e1d41e0162ecb9672';
+
+    
 
     useEffect(() => {
             const uid = Cookies.get('uid');
