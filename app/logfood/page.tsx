@@ -2,7 +2,7 @@
 // page.tsx
 import { useState, useEffect } from 'react';
 import { auth, db } from '../../utils/firebase';
-import { ref, push, onValue } from 'firebase/database';
+import { ref, push } from 'firebase/database';
 import { useRouter } from 'next/navigation';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
@@ -10,9 +10,14 @@ import Link from 'next/link';
 
 export default function Home() {
     const [query, setQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<any[]>([]);
-    const [nutritionData, setNutritionData] = useState<any>(null);
-    const [userGoals, setUserGoals] = useState<any>(null);
+    const [searchResults, setSearchResults] = useState<{ food_name: string }[]>([]);
+    const [nutritionData, setNutritionData] = useState<{
+        food_name: string;
+        nf_calories: number;
+        nf_protein: number;
+        nf_total_fat: number;
+        nf_total_carbohydrate: number;
+    } | null>(null);
     const [servings, setServings] = useState<number>(1);
     const router = useRouter();
 
