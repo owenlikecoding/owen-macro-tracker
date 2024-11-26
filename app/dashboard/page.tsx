@@ -32,8 +32,8 @@ interface Exercise {
 }
 export default function Dashboard() {
   const [goals, setGoals] = useState<Goal | null>(null);
-const [foods, setFoods] = useState<Food[]>([]);
-const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [foods, setFoods] = useState<Food[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [totals, setTotals] = useState({
     calories: 0,
     protein: 0,
@@ -48,29 +48,32 @@ const [exercises, setExercises] = useState<Exercise[]>([]);
       if (uid) {
         // Fetch user goals from the database
         const goalsRef = ref(db, `users/${uid}/goals`);
-        onValue(goalsRef, (snapshot) => {
-          setGoals(snapshot.val());
-        });
+      onValue(goalsRef, (snapshot) => {
+        const data = snapshot.val();
+        if (data) {
+          setGoals(data as Goal);
+        }
+      });
 
-        // Fetch logged foods from the database
-        const foodsRef = ref(db, `users/${uid}/foods`);
-        onValue(foodsRef, (snapshot) => {
-          const data = snapshot.val();
-          const foodList = data ? Object.values(data) : [];
-          setFoods(foodList as Food[]);
-        });
+      // Fetch logged foods from the database
+      const foodsRef = ref(db, `users/${uid}/foods`);
+      onValue(foodsRef, (snapshot) => {
+        const data = snapshot.val();
+        const foodList: Food[] = data ? Object.values(data) as Food[] : [];
+        setFoods(foodList);
+      });
 
-        // Fetch logged exercises from the database
-        const exercisesRef = ref(db, `users/${uid}/exercises`);
-        onValue(exercisesRef, (snapshot) => {
-          const data = snapshot.val();
-          const exerciseList = data ? Object.values(data) : [];
-          setExercises(exerciseList as Exercise[]);
-        });
-      } else {
-        // Redirect to login if not authenticated
-        router.push('/login');
-      }
+      // Fetch logged exercises from the database
+      const exercisesRef = ref(db, `users/${uid}/exercises`);
+      onValue(exercisesRef, (snapshot) => {
+        const data = snapshot.val();
+        const exerciseList: Exercise[] = data ? Object.values(data) as Exercise[] : [];
+        setExercises(exerciseList);
+      });
+    } else {
+      // Redirect to login if not authenticated
+      router.push('/login');
+    }
 
   }, [router]);
 
